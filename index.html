@@ -62,7 +62,7 @@ input:focus,textarea:focus,button:focus-visible,.opt:focus-visible{outline:2px s
 .row span:first-child{color:var(--muted)}
 ol.next,ul.list{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
 .note{font-size:12px;color:var(--muted);margin:0}
-.sent{display:flex;flex-direction:column;gap:16px} .pay-k{display:block;text-align:center;text-decoration:none;flex:0 0 auto}
+.sent{display:flex;flex-direction:column;gap:16px} .pay-k{display:block;text-align:center;text-decoration:none;flex:0 0 auto} .btn.kaspi{background:#F14635;border-color:#F14635;color:#fff}
 .from{font-size:13px;color:var(--muted)}
 .btn[disabled]{opacity:.6;cursor:wait}
 /* «Своё» - главный путь ответа: крупно, в рамке акцента, всегда первым. Подсказки - ниже и тише. */
@@ -296,7 +296,7 @@ const STEPS=[
    </div>`;}},
  {k:'sent',render:()=>`<div class="sent">${S.next===NEXT_Q?'<h1>Записали</h1>':S.paid?'<h1>Спасибо!</h1>':'<h1>Слово<br><em>принято</em></h1>'}
    <p class="lead">${firstName()?esc(firstName())+', а':'А'}нкета у нас. ${S.next===NEXT_Q?'Куратор напишет в WhatsApp в течение суток и ответит на вопросы. Решение - после разговора, вход до 29 ноября, 21:00.':(S.paid?'Куратор проверит поступление оплаты и свяжется с тобой в WhatsApp, чтобы добавить в группу.':'Последний шаг - оплата:')}</p>
-   ${S.next===NEXT_Q?'':'<a class="btn pay-k" href="https://pay.kaspi.kz/pay/aropqjkb" target="_blank" rel="noopener">Оплатить 75 000 ₸ в Kaspi</a>'+(S.paid?'<p class="note">Если оплата не прошла, кнопка выше по-прежнему работает. Сумма - 75 000 ₸.</p>':'<p class="note">Сумму 75 000 ₸ введи сам(а). После оплаты вернись сюда и нажми «Я оплатил(а)».</p><button type="button" class="btn ghost pay-k" data-act="paid">Я оплатил(а)</button>')}
+   ${S.next===NEXT_Q?'':'<a class="btn pay-k kaspi" href="https://pay.kaspi.kz/pay/aropqjkb" target="_blank" rel="noopener">Оплатить 75 000 ₸ в Kaspi</a>'+(S.paid?'<p class="note">Если оплата не прошла, кнопка выше по-прежнему работает. Сумма - 75 000 ₸.</p>':'<p class="note">Сумму 75 000 ₸ введи сам(а). После оплаты вернись сюда и нажми «Я оплатил(а)».</p><button type="button" class="btn ghost pay-k" data-act="paid">Я оплатил(а)</button>')}
    ${S.next===NEXT_Q||S.paid?'':`<ol class="next"><li>Оплата - до 29 ноября, 21:00</li><li>С 23 ноября - подготовительная неделя: задания идут, цена слова не сгорает</li><li>Куратор добавит тебя в чат твоего ритма, 27 ноября - в десятку с бадди</li><li>29 ноября - установочная встреча онлайн, ссылку пришлём</li><li>30 ноября - первый день</li></ol>`}
    ${SENDER?'':'<p class="note">Тестовый просмотр: в этой версии ответ никуда не отправлен.</p>'}</div>`}
 ];
