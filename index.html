@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Open+Sans:wght@400;600;700&display=swap">
 <style>
 :root{
-  --bg:#121314; --surface:#1C1D20; --line:#2E2F33; --fg:#F3F0E8; --muted:#A3A39E; --accent:#FF6A3D; --on-accent:#121314; --err:#FF8A8A;
+  --bg:#121314; --surface:#1C1D20; --line:#2E2F33; --fg:#F3F0E8; --muted:#A3A39E; --accent:#FF6A3D; --on-accent:#121314; --cta:#2FBF71; --err:#FF8A8A;
   --display:'Oswald','Arial Narrow',Arial,sans-serif; --body:'Open Sans',Arial,sans-serif;
   color-scheme:dark;
 }
@@ -53,7 +53,7 @@ input:focus,textarea:focus,button:focus-visible,.opt:focus-visible{outline:2px s
 .error:empty{display:none}
 .bar{flex-wrap:wrap}.bar .error{flex-basis:100%;background:var(--surface);border-left:3px solid var(--err);padding:10px 12px;border-radius:4px}
 .bar{position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding-block:14px calc(14px + env(safe-area-inset-bottom,0px));display:flex;gap:10px}
-.btn{flex:1;font:inherit;font-weight:700;font-size:16px;border-radius:6px;padding:16px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:var(--on-accent)}
+.btn{flex:1;font:inherit;font-weight:700;font-size:16px;border-radius:6px;padding:16px;cursor:pointer;border:1px solid var(--cta);background:var(--cta);color:#0E1A12}
 .btn.ghost{flex:0 0 auto;background:transparent;color:var(--fg);border-color:var(--line)}
 .contract{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:20px;display:flex;flex-direction:column;gap:12px}
 .contract p{margin:0}
