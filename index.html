@@ -174,6 +174,16 @@ let S=BLANK();
 try{const d=localStorage.getItem('anketa-chas-v4');if(d)S=Object.assign(S,JSON.parse(d));}catch(e){}
 let SHORT=false;
 try{const h=JSON.parse(localStorage.getItem('handoff-chas')||'null');if(h&&Date.now()-h.t<14*864e5&&!S.sent){SHORT=true;if(!S.name)S.name=h.name||'';if(!S.phone)S.phone=h.phone||'';if(!S.city)S.city=h.city||'';if(h.sphere&&sph(h.sphere)&&!S.sphere&&h.main){S.sphere=h.sphere;S.delay[h.sphere]=h.main;S.ago[h.sphere]=h.ago;}if(h.picks)Object.entries(h.picks).forEach(([id,w])=>{if(w&&sph(id)&&!S.delay[id]){S.delay[id]=w;S.ago[id]=S.ago[id]||'-';}});if(!S.sphere)SHORT=false;}}catch(e){}
+/* Метка источника: ?src=ad|dm|bio|fenix|alena. Реклама идёт без src - её узнаём по fbclid. Метка живёт 30 дней, пока не придёт новая */
+const SRC_MAP={ad:'Реклама',dm:'Директ «хочу»',bio:'Шапка профиля',fenix:'Фениксы',alena:'Алёна'};
+let SRC='';
+try{const q=new URLSearchParams(location.search);let s=(q.get('src')||'').toLowerCase().replace(/[^a-z0-9_-]/g,'').slice(0,20);
+  if(!s&&/link_in_bio/i.test(q.get('utm_content')||''))s='bio';
+  if(s){SRC=s;localStorage.setItem('src-chas',JSON.stringify({s:s,t:Date.now()}));}
+  else{const o=JSON.parse(localStorage.getItem('src-chas')||'null');if(o&&o.s&&Date.now()-o.t<30*864e5)SRC=o.s;else if(q.get('fbclid'))SRC='meta';}
+}catch(e){}
+const SRC_LIVE=true; /* true - после правки Apps Script: пишет src в «Источник» как есть */
+const srcOut=()=>{if(!SRC_LIVE)return SHORT?'1':'';const l=SRC?(SRC_MAP[SRC]||(SRC==='meta'?'Реклама':SRC)):'';return l?(SHORT?l+' + опрос':l):(SHORT?'1':'');};
 const skip=k=>(k==='review'&&S.next===NEXT_Q)||(SHORT&&(k==='delay'||k==='sphere'))||(k==='sphere'&&SPHERES.filter(x=>S.delay[x.id]).length===1);
 const save=()=>{try{localStorage.setItem('anketa-chas-v4',JSON.stringify(S));}catch(e){}};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -307,7 +317,7 @@ const API='https://script.google.com/macros/s/AKfycbwV5CZZ-z2IgfvqsQ5axBqlpbpxgE
 function apiCall(fn,arg,ok,fail){fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn:fn,arg:arg})}).then(r=>r.json()).then(j=>{if(j&&j.ok){if(ok)ok(j);}else if(fail)fail(j);}).catch(e=>{if(fail)fail(e);});}
 const SENDER={_ok:null,_f:null,withSuccessHandler(f){this._ok=f;return this;},withFailureHandler(f){this._f=f;return this;},submit(d){const o=this._ok,f=this._f;this._ok=this._f=null;apiCall('submit',d,j=>{try{fbq('track','Lead',{content_name:d&&d.next||''});}catch(e){}if(o)o(j);},f);},markPaid(p){try{fbq('trackCustom','PaidClaim');}catch(e){}apiCall('markPaid',p);}};
 /* Новые поля - в конце строки, чтобы старые колонки таблицы не съехали */
-function payload(){const r={src:SHORT?'1':'',name:S.name,phone:S.phone,insta:S.insta,sphere:(sph(S.sphere)||{}).name||'',a:S.a,b:S.b,why:S.why.concat(S.whyOwn?[S.whyOwn]:[]).join(', '),reward:S.reward,rhythm:S.rhythm,agree:S.agree.every(Boolean)?'Да':'Нет',
+function payload(){const r={src:srcOut(),name:S.name,phone:S.phone,insta:S.insta,sphere:(sph(S.sphere)||{}).name||'',a:S.a,b:S.b,why:S.why.concat(S.whyOwn?[S.whyOwn]:[]).join(', '),reward:S.reward,rhythm:S.rhythm,agree:S.agree.every(Boolean)?'Да':'Нет',
   city:S.city,next:S.next===NEXT_Q?'❓ Вопросы':'💳 К оплате',question:S.next===NEXT_Q?S.question:'',offer:S.agree[0]?'Да':'Нет',pd:S.agree[1]?'Да':'Нет',ritual:S.ritual};
   SPHERES.forEach(x=>{r['d_'+x.id]=S.delay[x.id]||'';r['ago_'+x.id]=S.ago[x.id]||'';});return r;}
 const main=document.getElementById('main'),next=document.getElementById('next'),back=document.getElementById('back'),bar=document.querySelector('.bar');
